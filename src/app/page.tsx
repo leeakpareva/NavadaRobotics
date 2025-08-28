@@ -6,13 +6,8 @@ import { useEffect, useState, useRef } from "react";
 import { Rocket, Cpu, Eye, Brain, User, Mail } from "lucide-react";
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Track visible sections for animations
   useEffect(() => {
@@ -40,10 +35,10 @@ export default function Home() {
     };
   }, []);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation (desktop only)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || window.innerWidth < 768) return;
       
       const scrollAmount = window.innerWidth;
       if (e.key === "ArrowRight") {
@@ -70,7 +65,7 @@ export default function Home() {
       ],
       image: "/RobotSpidervid.mp4",
       isVideo: true,
-      position: "left" // Text on left side
+      position: "left"
     },
     {
       id: "raspberry-pi",
@@ -83,7 +78,7 @@ export default function Home() {
         "Empowering developers worldwide to prototype revolutionary ideas."
       ],
       image: "/Spider-9.png",
-      position: "right" // Text on right side
+      position: "right"
     },
     {
       id: "computer-vision",
@@ -151,20 +146,20 @@ export default function Home() {
       <Sidebar />
       
       {/* Footer */}
-      <div className="fixed bottom-4 right-4 z-40">
-        <p className="text-white/60 text-xs font-medium drop-shadow-lg" 
+      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-40">
+        <p className="text-white/60 text-[10px] md:text-xs font-medium drop-shadow-lg" 
            style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
           Designed & Developed by Lee Akpareva MBA, MA.
         </p>
       </div>
       
       {/* Navigation dots */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-1 md:gap-2">
         {pages.map((_, index) => (
           <button
             key={index}
             onClick={() => scrollToSection(index)}
-            className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 transition-all"
+            className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/30 hover:bg-white/60 transition-all touch-manipulation"
             aria-label={`Go to section ${index + 1}`}
           />
         ))}
@@ -177,7 +172,8 @@ export default function Home() {
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch'
+          WebkitOverflowScrolling: 'touch',
+          touchAction: 'pan-x'
         }}
       >
         <style jsx>{`
@@ -188,7 +184,7 @@ export default function Home() {
           @keyframes slideInLeft {
             from {
               opacity: 0;
-              transform: translateX(-50px);
+              transform: translateX(-30px);
             }
             to {
               opacity: 1;
@@ -199,7 +195,7 @@ export default function Home() {
           @keyframes slideInRight {
             from {
               opacity: 0;
-              transform: translateX(50px);
+              transform: translateX(30px);
             }
             to {
               opacity: 1;
@@ -210,7 +206,7 @@ export default function Home() {
           @keyframes fadeInUp {
             from {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(15px);
             }
             to {
               opacity: 1;
@@ -219,15 +215,15 @@ export default function Home() {
           }
           
           .animate-slide-in-left {
-            animation: slideInLeft 0.8s ease-out forwards;
+            animation: slideInLeft 0.6s ease-out forwards;
           }
           
           .animate-slide-in-right {
-            animation: slideInRight 0.8s ease-out forwards;
+            animation: slideInRight 0.6s ease-out forwards;
           }
           
           .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
+            animation: fadeInUp 0.5s ease-out forwards;
           }
         `}</style>
         
@@ -249,7 +245,9 @@ export default function Home() {
                     loop
                     muted
                     playsInline
+                    preload="metadata"
                     className="absolute inset-0 w-full h-full object-cover"
+                    style={{ objectPosition: 'center center' }}
                   />
                 ) : (
                   <Image
@@ -260,14 +258,17 @@ export default function Home() {
                     priority={index <= 1}
                     quality={100}
                     sizes="100vw"
+                    style={{ objectPosition: 'center center' }}
                   />
                 )}
                 
-                {/* Text content positioned at bottom corner - no background */}
+                {/* Mobile-optimized text content */}
                 <div 
-                  className={`absolute bottom-8 ${
-                    isLeft ? 'left-8 text-left' : 'right-8 text-right'
-                  } max-w-sm ${
+                  className={`absolute ${
+                    isLeft 
+                      ? 'bottom-4 left-4 text-left sm:bottom-6 sm:left-6 md:bottom-8 md:left-8' 
+                      : 'bottom-4 right-4 text-right sm:bottom-6 sm:right-6 md:bottom-8 md:right-8'
+                  } max-w-[280px] sm:max-w-sm md:max-w-md ${
                     isVisible 
                       ? isLeft 
                         ? 'animate-slide-in-left' 
@@ -277,21 +278,25 @@ export default function Home() {
                 >
                   {/* Icon */}
                   <Icon 
-                    className={`h-8 w-8 text-white mb-3 drop-shadow-lg ${
+                    className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white mb-2 md:mb-3 ${
                       isLeft ? '' : 'ml-auto'
                     } ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}
-                    style={{ animationDelay: '0.2s' }}
+                    style={{ 
+                      animationDelay: '0.2s',
+                      filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'
+                    }}
                   />
                   
                   {/* Title */}
                   <h1 
-                    className={`text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-lg ${
+                    className={`text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 ${
                       isVisible ? 'animate-fade-in-up' : 'opacity-0'
                     }`}
                     style={{ 
                       animationDelay: '0.3s', 
-                      textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                      fontFamily: 'inherit'
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+                      fontFamily: 'inherit',
+                      lineHeight: '1.2'
                     }}
                   >
                     {page.title}
@@ -299,13 +304,14 @@ export default function Home() {
                   
                   {/* Subtitle */}
                   <p 
-                    className={`text-sm md:text-base font-semibold text-white mb-2 drop-shadow-lg ${
+                    className={`text-sm sm:text-base md:text-lg font-semibold text-white mb-2 ${
                       isVisible ? 'animate-fade-in-up' : 'opacity-0'
                     }`}
                     style={{ 
                       animationDelay: '0.4s', 
-                      textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                      fontFamily: 'inherit'
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
+                      fontFamily: 'inherit',
+                      lineHeight: '1.3'
                     }}
                   >
                     {page.subtitle}
@@ -316,13 +322,14 @@ export default function Home() {
                     {page.content.map((paragraph, idx) => (
                       <p
                         key={idx}
-                        className={`text-xs md:text-sm font-normal text-white leading-tight drop-shadow-lg ${
+                        className={`text-xs sm:text-sm md:text-base font-normal text-white leading-tight ${
                           isVisible ? 'animate-fade-in-up' : 'opacity-0'
                         }`}
                         style={{
                           animationDelay: `${0.5 + (idx * 0.1)}s`,
                           textShadow: '1px 1px 3px rgba(0,0,0,0.9)',
-                          fontFamily: 'inherit'
+                          fontFamily: 'inherit',
+                          lineHeight: '1.4'
                         }}
                       >
                         {paragraph}

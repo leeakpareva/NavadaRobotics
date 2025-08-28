@@ -10,6 +10,8 @@ const crimsonText = Crimson_Text({
 export const metadata: Metadata = {
   title: "NAVADA Robotics - Pioneering the Future",
   description: "Smart Robotics with Raspberry Pi + AI + Computer Vision",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
