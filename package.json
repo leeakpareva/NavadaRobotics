@@ -2,9 +2,13 @@
   "name": "navadarobotics",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.2.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
