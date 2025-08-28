@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Crimson_Text } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const crimsonText = Crimson_Text({ 
+  subsets: ["latin"],
+  weight: ["400", "600", "700"]
+});
 
 export const metadata: Metadata = {
   title: "NAVADA Robotics - Pioneering the Future",
@@ -16,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-black text-white overflow-hidden`}>
+      <body className={`${crimsonText.className} bg-black text-white overflow-hidden`}>
         {children}
       </body>
     </html>

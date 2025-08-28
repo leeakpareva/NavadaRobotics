@@ -68,7 +68,8 @@ export default function Home() {
         "NAVADA - Navigating Artistic Vision with Advanced Digital Assistance",
         "Mission: Pioneer and inspire the next wave of AI developers in robotics."
       ],
-      image: "/The Famous 3 .png",
+      image: "/RobotSpidervid.mp4",
+      isVideo: true,
       position: "left" // Text on left side
     },
     {
@@ -241,15 +242,26 @@ export default function Home() {
                 key={page.id}
                 className="w-screen h-screen flex-shrink-0 snap-center relative"
               >
-                <Image
-                  src={page.image}
-                  alt={page.title}
-                  fill
-                  className="object-cover"
-                  priority={index <= 1}
-                  quality={100}
-                  sizes="100vw"
-                />
+                {page.isVideo ? (
+                  <video
+                    src={page.image}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={page.image}
+                    alt={page.title}
+                    fill
+                    className="object-cover"
+                    priority={index <= 1}
+                    quality={100}
+                    sizes="100vw"
+                  />
+                )}
                 
                 {/* Text content positioned at bottom corner - no background */}
                 <div 
@@ -273,35 +285,44 @@ export default function Home() {
                   
                   {/* Title */}
                   <h1 
-                    className={`text-3xl md:text-4xl font-black text-white mb-2 drop-shadow-lg ${
+                    className={`text-xl md:text-2xl font-bold text-white mb-1 drop-shadow-lg ${
                       isVisible ? 'animate-fade-in-up' : 'opacity-0'
                     }`}
-                    style={{ animationDelay: '0.3s', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
+                    style={{ 
+                      animationDelay: '0.3s', 
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                      fontFamily: 'inherit'
+                    }}
                   >
                     {page.title}
                   </h1>
                   
                   {/* Subtitle */}
                   <p 
-                    className={`text-base md:text-lg font-bold text-white mb-4 drop-shadow-lg ${
+                    className={`text-sm md:text-base font-semibold text-white mb-2 drop-shadow-lg ${
                       isVisible ? 'animate-fade-in-up' : 'opacity-0'
                     }`}
-                    style={{ animationDelay: '0.4s', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
+                    style={{ 
+                      animationDelay: '0.4s', 
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                      fontFamily: 'inherit'
+                    }}
                   >
                     {page.subtitle}
                   </p>
                   
                   {/* Content paragraphs */}
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {page.content.map((paragraph, idx) => (
                       <p
                         key={idx}
-                        className={`text-sm md:text-base font-semibold text-white leading-relaxed drop-shadow-lg ${
+                        className={`text-xs md:text-sm font-normal text-white leading-tight drop-shadow-lg ${
                           isVisible ? 'animate-fade-in-up' : 'opacity-0'
                         }`}
                         style={{
                           animationDelay: `${0.5 + (idx * 0.1)}s`,
-                          textShadow: '1px 1px 3px rgba(0,0,0,0.9)'
+                          textShadow: '1px 1px 3px rgba(0,0,0,0.9)',
+                          fontFamily: 'inherit'
                         }}
                       >
                         {paragraph}
