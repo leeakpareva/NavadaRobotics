@@ -68,7 +68,7 @@ export default function Home() {
         "NAVADA - Navigating Artistic Vision with Advanced Digital Assistance",
         "Mission: Pioneer and inspire the next wave of AI developers in robotics."
       ],
-      image: "/Robot Arm.png",
+      image: "/The Famous 3 .png",
       position: "left" // Text on left side
     },
     {
@@ -148,6 +148,14 @@ export default function Home() {
   return (
     <>
       <Sidebar />
+      
+      {/* Footer */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <p className="text-white/60 text-xs font-medium drop-shadow-lg" 
+           style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+          Designed & Developed by Lee Akpareva MBA, MA.
+        </p>
+      </div>
       
       {/* Navigation dots */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
