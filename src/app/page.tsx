@@ -7,18 +7,49 @@ import { Rocket, Cpu, Eye, Brain, User, Mail } from "lucide-react";
 
 export default function Home() {
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
+  const [textVisibleSections, setTextVisibleSections] = useState<Set<number>>(new Set());
+  const [currentSection, setCurrentSection] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const textTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track visible sections for animations
+  // Track visible sections for animations and handle text auto-hide
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       
       const scrollLeft = containerRef.current.scrollLeft;
       const sectionWidth = window.innerWidth;
-      const currentSection = Math.round(scrollLeft / sectionWidth);
+      const newSection = Math.round(scrollLeft / sectionWidth);
       
-      setVisibleSections(prev => new Set([...prev, currentSection]));
+      setVisibleSections(prev => new Set([...prev, newSection]));
+      
+      // If section changed
+      if (newSection !== currentSection) {
+        setCurrentSection(newSection);
+        
+        // On mobile, show text for new section and hide after 4 seconds
+        if (window.innerWidth < 768) {
+          // Clear any existing timer
+          if (textTimerRef.current) {
+            clearTimeout(textTimerRef.current);
+          }
+          
+          // Show text for new section
+          setTextVisibleSections(prev => new Set([...prev, newSection]));
+          
+          // Hide text after 4 seconds
+          textTimerRef.current = setTimeout(() => {
+            setTextVisibleSections(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(newSection);
+              return newSet;
+            });
+          }, 4000);
+        } else {
+          // On desktop, always show text
+          setTextVisibleSections(prev => new Set([...prev, newSection]));
+        }
+      }
     };
 
     const container = containerRef.current;
@@ -32,8 +63,11 @@ export default function Home() {
       if (container) {
         container.removeEventListener('scroll', handleScroll);
       }
+      if (textTimerRef.current) {
+        clearTimeout(textTimerRef.current);
+      }
     };
-  }, []);
+  }, [currentSection]);
 
   // Handle keyboard navigation (desktop only)
   useEffect(() => {
@@ -77,7 +111,8 @@ export default function Home() {
         "Enabling robotic arms, IoT sensors, and real-time computer vision.",
         "Empowering developers worldwide to prototype revolutionary ideas."
       ],
-      image: "/Spider-9.png",
+      image: "/Walking pugs.mp4",
+      isVideo: true,
       position: "right"
     },
     {
@@ -90,7 +125,8 @@ export default function Home() {
         "OpenCV, YOLO, and ML models for recognition and navigation.",
         "AI model deployment and real-time processing pipelines."
       ],
-      image: "/Spider-7.png",
+      image: "/Spider-77.mp4",
+      isVideo: true,
       position: "left"
     },
     {
@@ -103,7 +139,8 @@ export default function Home() {
         "Multi-agent systems with LLM integration and RAG pipelines.",
         "Building scalable assistants, drones, and Industry 4.0 solutions."
       ],
-      image: "/Twin Dogs.png",
+      image: "/Robodog.mp4",
+      isVideo: true,
       position: "right"
     },
     {
@@ -116,7 +153,8 @@ export default function Home() {
         "Solutions for Generali, DHL, British Airways, Expedia.",
         "Bridging art, design, and AI engineering."
       ],
-      image: "/Twins.png",
+      image: "/Malcom.mp4",
+      isVideo: true,
       position: "left"
     },
     {
@@ -129,7 +167,8 @@ export default function Home() {
         "Use the sidebar contact form to connect.",
         "Navigate the intersection of AI and creativity."
       ],
-      image: "/Robot Arm.png",
+      image: "/arm.mp4",
+      isVideo: true,
       position: "right"
     }
   ];
@@ -223,7 +262,9 @@ export default function Home() {
           {pages.map((page, index) => {
             const Icon = page.icon;
             const isVisible = visibleSections.has(index);
+            const isTextVisible = textVisibleSections.has(index);
             const isLeft = page.position === "left";
+            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
             
             return (
               <div
@@ -265,11 +306,11 @@ export default function Home() {
                       : 'md:w-auto md:px-0 md:translate-y-0 md:bottom-8 md:right-8 md:left-auto md:text-right md:top-auto')
                   }`}
                 >
-                  <div className={`inline-block max-w-[280px] sm:max-w-sm md:max-w-md ${
-                    isVisible 
+                  <div className={`inline-block max-w-[280px] sm:max-w-sm md:max-w-md transition-opacity duration-500 ${
+                    isTextVisible
                       ? isLeft 
-                        ? 'md:animate-slide-in-left' 
-                        : 'md:animate-slide-in-right'
+                        ? 'opacity-100 md:animate-slide-in-left' 
+                        : 'opacity-100 md:animate-slide-in-right'
                       : 'opacity-0'
                   }`}
                 >
@@ -277,7 +318,7 @@ export default function Home() {
                   <Icon 
                     className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white mb-2 md:mb-3 mx-auto ${
                       isLeft ? 'md:ml-0 md:mr-auto' : 'md:ml-auto md:mr-0'
-                    } ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}
+                    } animate-fade-in-up`}
                     style={{ 
                       animationDelay: '0.2s',
                       filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'
@@ -286,9 +327,7 @@ export default function Home() {
                   
                   {/* Title */}
                   <h1 
-                    className={`text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 ${
-                      isVisible ? 'animate-fade-in-up' : 'opacity-0'
-                    }`}
+                    className="text-2xl sm:text-3xl md:text-2xl font-bold text-white mb-1 animate-fade-in-up"
                     style={{ 
                       animationDelay: '0.3s', 
                       textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
@@ -301,9 +340,7 @@ export default function Home() {
                   
                   {/* Subtitle */}
                   <p 
-                    className={`text-sm sm:text-base md:text-lg font-semibold text-white mb-2 ${
-                      isVisible ? 'animate-fade-in-up' : 'opacity-0'
-                    }`}
+                    className="text-base sm:text-lg md:text-lg font-semibold text-white mb-2 animate-fade-in-up"
                     style={{ 
                       animationDelay: '0.4s', 
                       textShadow: '2px 2px 4px rgba(0,0,0,0.9)',
@@ -319,9 +356,7 @@ export default function Home() {
                     {page.content.map((paragraph, idx) => (
                       <p
                         key={idx}
-                        className={`text-xs sm:text-sm md:text-base font-normal text-white leading-tight ${
-                          isVisible ? 'animate-fade-in-up' : 'opacity-0'
-                        }`}
+                        className="text-sm sm:text-base md:text-base font-normal text-white leading-tight animate-fade-in-up"
                         style={{
                           animationDelay: `${0.5 + (idx * 0.1)}s`,
                           textShadow: '1px 1px 3px rgba(0,0,0,0.9)',
