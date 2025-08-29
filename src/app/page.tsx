@@ -145,14 +145,6 @@ export default function Home() {
     <>
       <Sidebar />
       
-      {/* Footer */}
-      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-40">
-        <p className="text-white/60 text-[10px] md:text-xs font-medium drop-shadow-lg" 
-           style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
-          Designed & Developed by Lee Akpareva MBA, MA.
-        </p>
-      </div>
-      
       {/* Navigation dots */}
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-1 md:gap-2">
         {pages.map((_, index) => (
@@ -246,7 +238,7 @@ export default function Home() {
                     muted
                     playsInline
                     preload="metadata"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover mobile-zoom-out"
                     style={{ objectPosition: 'center center' }}
                   />
                 ) : (
@@ -254,7 +246,7 @@ export default function Home() {
                     src={page.image}
                     alt={page.title}
                     fill
-                    className="object-cover"
+                    className="object-cover mobile-zoom-out"
                     priority={index <= 1}
                     quality={100}
                     sizes="100vw"
@@ -264,22 +256,27 @@ export default function Home() {
                 
                 {/* Mobile-optimized text content */}
                 <div 
-                  className={`absolute ${
-                    isLeft 
-                      ? 'bottom-4 left-4 text-left sm:bottom-6 sm:left-6 md:bottom-8 md:left-8' 
-                      : 'bottom-4 right-4 text-right sm:bottom-6 sm:right-6 md:bottom-8 md:right-8'
-                  } max-w-[280px] sm:max-w-sm md:max-w-md ${
+                  className={`absolute w-full px-4 ${
+                    // Mobile: center of screen
+                    'top-1/2 left-0 -translate-y-1/2 text-center ' +
+                    // Desktop: bottom corners
+                    (isLeft 
+                      ? 'md:w-auto md:px-0 md:translate-y-0 md:bottom-8 md:left-8 md:text-left md:top-auto' 
+                      : 'md:w-auto md:px-0 md:translate-y-0 md:bottom-8 md:right-8 md:left-auto md:text-right md:top-auto')
+                  }`}
+                >
+                  <div className={`inline-block max-w-[280px] sm:max-w-sm md:max-w-md ${
                     isVisible 
                       ? isLeft 
-                        ? 'animate-slide-in-left' 
-                        : 'animate-slide-in-right'
+                        ? 'md:animate-slide-in-left' 
+                        : 'md:animate-slide-in-right'
                       : 'opacity-0'
                   }`}
                 >
                   {/* Icon */}
                   <Icon 
-                    className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white mb-2 md:mb-3 ${
-                      isLeft ? '' : 'ml-auto'
+                    className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white mb-2 md:mb-3 mx-auto ${
+                      isLeft ? 'md:ml-0 md:mr-auto' : 'md:ml-auto md:mr-0'
                     } ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}
                     style={{ 
                       animationDelay: '0.2s',
@@ -335,6 +332,7 @@ export default function Home() {
                         {paragraph}
                       </p>
                     ))}
+                  </div>
                   </div>
                 </div>
               </div>
