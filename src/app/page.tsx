@@ -111,7 +111,7 @@ export default function Home() {
         "Enabling robotic arms, IoT sensors, and real-time computer vision.",
         "Empowering developers worldwide to prototype revolutionary ideas."
       ],
-      image: "/Walking pugs.mp4",
+  image: "/Walking Pugs.mp4",
       isVideo: true,
       position: "right"
     },
@@ -167,7 +167,7 @@ export default function Home() {
         "Use the sidebar contact form to connect.",
         "Navigate the intersection of AI and creativity."
       ],
-      image: "/arm.mp4",
+  image: "/Arm.mp4",
       isVideo: true,
       position: "right"
     }
